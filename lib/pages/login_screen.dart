@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset('assets/icon/logo.svg'),
+            SvgPicture.asset('assets/icon/logo.svg'),
             const SizedBox(height: 20),
             input("Mã số thuế", taxCtrl, taxError, type: TextInputType.number),
             input("Tài khoản", userCtrl, userError),
@@ -125,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image.asset('assets/icon/headphone.svg'),
+                      SvgPicture.asset('assets/icon/headphone.svg', width:18,),
                       SizedBox(width: 1),
                       Text('Trợ giúp'),
                     ],
@@ -135,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image.asset('assets/icon/social_link.svg'),
+                      SvgPicture.asset('assets/icon/social_link.svg', width:18),
                       SizedBox(width: 2),
                       Text('Group'),
                     ],
@@ -145,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image.asset('assets/icon/vector.jpg'),
+                      SvgPicture.asset('assets/icon/vector.svg', width:18),
                       SizedBox(width: 2),
                       Text('Tra cứu'),
                     ],
