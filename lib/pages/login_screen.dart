@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -34,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (valid) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()), //Hiện tại file này chx tồn tại
+          MaterialPageRoute(builder: (context) => HomeScreen()), //Hiện tại file này chx tồn tại, a bảo là xong phần 1 a cho phần 2 khác
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -95,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset('assets/icon/Logo.png'),
+            Image.asset('assets/icon/logo.svg'),
             const SizedBox(height: 20),
             input("Mã số thuế", taxCtrl, taxError, type: TextInputType.number),
             input("Tài khoản", userCtrl, userError),
@@ -123,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image.asset('assets/icon/headphone.jpg', width: 18),
+                      Image.asset('assets/icon/headphone.svg'),
                       SizedBox(width: 1),
                       Text('Trợ giúp'),
                     ],
@@ -133,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image.asset('assets/icon/facebook.jpg', width: 20),
+                      Image.asset('assets/icon/social_link.svg'),
                       SizedBox(width: 2),
                       Text('Group'),
                     ],
@@ -143,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image.asset('assets/icon/search.jpg', width: 20),
+                      Image.asset('assets/icon/vector.jpg'),
                       SizedBox(width: 2),
                       Text('Tra cứu'),
                     ],
