@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +17,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listeners to update UI on text change
+    taxCtrl.addListener(() => setState(() {}));
+    userCtrl.addListener(() => setState(() {}));
+    passCtrl.addListener(() => setState(() {}));
+  }
 
   void login() {
     if (_formKey.currentState!.validate()) {
@@ -102,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SvgPicture.asset('assets/icon/logo.svg'),
               const SizedBox(height: 20),
 
-              // Tax Code Input
+              // Tax Input
               input(
                 label: "Mã số thuế",
                 ctrl: taxCtrl,
@@ -114,10 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                suffixIcon: IconButton(
-                  onPressed: () => taxCtrl.clear(),
-                  icon: SvgPicture.asset('assets/icon/delete.svg'),
-                ),
+                suffixIcon: taxCtrl.text.isNotEmpty
+                    ? IconButton(
+                  onPressed: () => setState(() => taxCtrl.clear()),
+                  icon: Icon(Icons.clear),
+                )
+                    : null,
               ),
 
               // Username Input
@@ -131,10 +143,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                suffixIcon: IconButton(
-                  onPressed: () => userCtrl.clear(),
-                  icon: SvgPicture.asset('assets/icon/delete.svg'),
-                ),
+                suffixIcon: userCtrl.text.isNotEmpty
+                    ? IconButton(
+                  onPressed: () => setState(() => userCtrl.clear()),
+                  icon: Icon(Icons.clear),
+                )
+                    : null,
               ),
 
               // Password Input
@@ -151,14 +165,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                suffixIcon: IconButton(
+                suffixIcon: passCtrl.text.isNotEmpty
+                    ? IconButton(
                   onPressed: () {
                     setState(() {
                       _obscurePassword = !_obscurePassword;
                     });
                   },
-                  icon: _obscurePassword ? SvgPicture.asset('assets/icon/eye_slash.svg') : SvgPicture.asset('assets/icon/eye.svg'),
-                ),
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                )
+                    : null,
               ),
 
               SizedBox(
@@ -181,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               Spacer(),
 
-              // Bottom Help Row
+              // Help Row
               Row(
                 children: <Widget>[
                   Expanded(
