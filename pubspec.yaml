@@ -67,6 +67,9 @@ flutter:
     - assets/icon/logo.svg
     - assets/icon/social_link.svg
     - assets/icon/vector.svg
+    - assets/icon/delete.svg
+    - assets/icon/eye.svg
+    - assets/icon/eye_slash.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

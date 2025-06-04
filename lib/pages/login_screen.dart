@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 suffixIcon: IconButton(
                   onPressed: () => taxCtrl.clear(),
-                  icon: Icon(Icons.clear),
+                  icon: SvgPicture.asset('assets/icon/delete.svg'),
                 ),
               ),
 
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 suffixIcon: IconButton(
                   onPressed: () => userCtrl.clear(),
-                  icon: Icon(Icons.clear),
+                  icon: SvgPicture.asset('assets/icon/delete.svg'),
                 ),
               ),
 
@@ -157,9 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       _obscurePassword = !_obscurePassword;
                     });
                   },
-                  icon: Icon(
-                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  ),
+                  icon: _obscurePassword ? SvgPicture.asset('assets/icon/eye_slash.svg') : SvgPicture.asset('assets/icon/eye.svg'),
                 ),
               ),
 
