@@ -9,16 +9,22 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+// extension on int {
+//   trim() {}
+// }
+
 class _LoginScreenState extends State<LoginScreen> {
   final taxCtrl = TextEditingController();
   final userCtrl = TextEditingController();
   final passCtrl = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
   void login() {
     if (_formKey.currentState!.validate()) {
-      final valid = taxCtrl.text == "1111111111" &&
+      final valid =
+          taxCtrl.text == "1111111111" &&
           userCtrl.text == "demo" &&
           passCtrl.text == "123456";
 
@@ -28,6 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
+        setState(() {
+          _autovalidateMode = AutovalidateMode.always;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Mã số thuế, mật khẩu hoặc tài khoản sai')),
         );
@@ -40,7 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
     required TextEditingController ctrl,
     required String? Function(String?) validator,
     bool obscure = false,
-    TextInputType type = TextInputType.text, required String hintText,
+    TextInputType type = TextInputType.text,
+    required String hintText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(24),
         child: Form(
           key: _formKey,
+          autovalidateMode: _autovalidateMode,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -94,9 +105,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: "Mã số thuế",
                 ctrl: taxCtrl,
                 type: TextInputType.number,
-                hintText:'Điền mã số thuế',
+                hintText: 'Điền mã số thuế',
                 validator: (value) {
-                  if (value == null || value.length != 10) {
+                  if (value == null || value.trim().length!= 10) {
                     return "Mã số thuế phải có 10 chữ số";
                   }
                   return null;
@@ -105,9 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
               input(
                 label: "Tài khoản",
                 ctrl: userCtrl,
-                hintText:'Điền tài khoản',
+                hintText: 'Điền tài khoản',
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return "Tên đăng nhập không được để trống";
                   }
                   return null;
@@ -117,9 +128,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: "Mật khẩu",
                 ctrl: passCtrl,
                 obscure: true,
-                hintText:'Điền mật khẩu',
+                hintText: 'Điền mật khẩu',
                 validator: (value) {
-                  if (value == null || value.length < 6 || value.length > 50) {
+                  if (value == null ||
+                      value.trim().length < 6 ||
+                      value.trim().length > 50) {
                     return "Mật khẩu phải từ 6 đến 50 ký tự";
                   }
                   return null;
@@ -148,7 +161,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        SvgPicture.asset('assets/icon/headphone.svg', width: 18),
+                        SvgPicture.asset(
+                          'assets/icon/headphone.svg',
+                          width: 18,
+                        ),
                         SizedBox(width: 1),
                         Text('Trợ giúp'),
                       ],
@@ -158,7 +174,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        SvgPicture.asset('assets/icon/social_link.svg', width: 18),
+                        SvgPicture.asset(
+                          'assets/icon/social_link.svg',
+                          width: 18,
+                        ),
                         SizedBox(width: 2),
                         Text('Group'),
                       ],
