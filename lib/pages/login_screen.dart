@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,10 +9,6 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// extension on int {
-//   trim() {}
-// }
-
 class _LoginScreenState extends State<LoginScreen> {
   final taxCtrl = TextEditingController();
   final userCtrl = TextEditingController();
@@ -20,13 +16,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  bool _obscurePassword = true;
 
   void login() {
     if (_formKey.currentState!.validate()) {
       final valid =
           taxCtrl.text == "1111111111" &&
-          userCtrl.text == "demo" &&
-          passCtrl.text == "123456";
+              userCtrl.text == "demo" &&
+              passCtrl.text == "123456";
 
       if (valid) {
         Navigator.push(
@@ -48,9 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
     required String label,
     required TextEditingController ctrl,
     required String? Function(String?) validator,
+    required String hintText,
+    required Widget? suffixIcon,
     bool obscure = false,
     TextInputType type = TextInputType.text,
-    required String hintText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,12 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
           keyboardType: type,
           validator: validator,
           decoration: InputDecoration(
+            hintText: hintText,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.orange),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.orangeAccent),
             ),
+            suffixIcon: suffixIcon,
           ),
         ),
         const SizedBox(height: 16),
@@ -101,18 +101,26 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               SvgPicture.asset('assets/icon/logo.svg'),
               const SizedBox(height: 20),
+
+              // Tax Code Input
               input(
                 label: "Mã số thuế",
                 ctrl: taxCtrl,
                 type: TextInputType.number,
                 hintText: 'Điền mã số thuế',
                 validator: (value) {
-                  if (value == null || value.trim().length!= 10) {
+                  if (value == null || value.trim().length != 10) {
                     return "Mã số thuế phải có 10 chữ số";
                   }
                   return null;
                 },
+                suffixIcon: IconButton(
+                  onPressed: () => taxCtrl.clear(),
+                  icon: Icon(Icons.clear),
+                ),
               ),
+
+              // Username Input
               input(
                 label: "Tài khoản",
                 ctrl: userCtrl,
@@ -123,11 +131,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
+                suffixIcon: IconButton(
+                  onPressed: () => userCtrl.clear(),
+                  icon: Icon(Icons.clear),
+                ),
               ),
+
+              // Password Input
               input(
                 label: "Mật khẩu",
                 ctrl: passCtrl,
-                obscure: true,
+                obscure: _obscurePassword,
                 hintText: 'Điền mật khẩu',
                 validator: (value) {
                   if (value == null ||
@@ -137,7 +151,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  ),
+                ),
               ),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -155,16 +180,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+
               Spacer(),
+
+              // Bottom Help Row
               Row(
                 children: <Widget>[
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        SvgPicture.asset(
-                          'assets/icon/headphone.svg',
-                          width: 18,
-                        ),
+                        SvgPicture.asset('assets/icon/headphone.svg', width: 18),
                         SizedBox(width: 1),
                         Text('Trợ giúp'),
                       ],
@@ -174,10 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        SvgPicture.asset(
-                          'assets/icon/social_link.svg',
-                          width: 18,
-                        ),
+                        SvgPicture.asset('assets/icon/social_link.svg', width: 18),
                         SizedBox(width: 2),
                         Text('Group'),
                       ],
