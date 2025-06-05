@@ -16,24 +16,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
-  bool _obscurePassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Listeners to update UI on text change
-    taxCtrl.addListener(() => setState(() {}));
-    userCtrl.addListener(() => setState(() {}));
-    passCtrl.addListener(() => setState(() {}));
-  }
 
   void login() {
     if (_formKey.currentState!.validate()) {
       final valid =
           taxCtrl.text == "1111111111" &&
-              userCtrl.text == "demo" &&
-              passCtrl.text == "123456";
+          userCtrl.text == "demo" &&
+          passCtrl.text == "123456";
 
       if (valid) {
         Navigator.push(
@@ -49,44 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     }
-  }
-
-  Widget input({
-    required String label,
-    required TextEditingController ctrl,
-    required String? Function(String?) validator,
-    required String hintText,
-    required Widget? suffixIcon,
-    bool obscure = false,
-    TextInputType type = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(height: 4),
-        TextFormField(
-          controller: ctrl,
-          obscureText: obscure,
-          keyboardType: type,
-          validator: validator,
-          decoration: InputDecoration(
-            hintText: hintText,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.orange),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.orangeAccent),
-            ),
-            suffixIcon: suffixIcon,
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
   }
 
   @override
@@ -112,11 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
               SvgPicture.asset('assets/icon/logo.svg'),
               const SizedBox(height: 20),
 
-              // Tax Input
-              input(
+              CustomInputField(
                 label: "Mã số thuế",
-                ctrl: taxCtrl,
-                type: TextInputType.number,
+                controller: taxCtrl,
                 hintText: 'Điền mã số thuế',
                 validator: (value) {
                   if (value == null || value.trim().length != 10) {
@@ -124,18 +73,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                suffixIcon: taxCtrl.text.isNotEmpty
-                    ? IconButton(
-                  onPressed: () => setState(() => taxCtrl.clear()),
-                  icon: Icon(Icons.clear),
-                )
-                    : null,
+                keyboardType: TextInputType.number,
               ),
-
-              // Username Input
-              input(
+              CustomInputField(
                 label: "Tài khoản",
-                ctrl: userCtrl,
+                controller: userCtrl,
                 hintText: 'Điền tài khoản',
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -143,20 +85,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                suffixIcon: userCtrl.text.isNotEmpty
-                    ? IconButton(
-                  onPressed: () => setState(() => userCtrl.clear()),
-                  icon: Icon(Icons.clear),
-                )
-                    : null,
               ),
-
-              // Password Input
-              input(
+              CustomInputField(
                 label: "Mật khẩu",
-                ctrl: passCtrl,
-                obscure: _obscurePassword,
+                controller: passCtrl,
                 hintText: 'Điền mật khẩu',
+                isPassword: true,
                 validator: (value) {
                   if (value == null ||
                       value.trim().length < 6 ||
@@ -165,20 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                   return null;
                 },
-                suffixIcon: passCtrl.text.isNotEmpty
-                    ? IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  },
-                  icon: Icon(
-                    _obscurePassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
-                )
-                    : null,
               ),
 
               SizedBox(
@@ -207,7 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        SvgPicture.asset('assets/icon/headphone.svg', width: 18),
+                        SvgPicture.asset(
+                          'assets/icon/headphone.svg',
+                          width: 18,
+                        ),
                         SizedBox(width: 1),
                         Text('Trợ giúp'),
                       ],
@@ -217,7 +140,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        SvgPicture.asset('assets/icon/social_link.svg', width: 18),
+                        SvgPicture.asset(
+                          'assets/icon/social_link.svg',
+                          width: 18,
+                        ),
                         SizedBox(width: 2),
                         Text('Group'),
                       ],
@@ -242,3 +168,85 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+class CustomInputField extends StatefulWidget {
+  final String label;
+  final TextEditingController controller;
+  final String hintText;
+  final String? Function(String?) validator;
+  final bool isPassword;
+  final TextInputType keyboardType;
+
+  const CustomInputField({
+    super.key,
+    required this.label,
+    required this.controller,
+    required this.hintText,
+    required this.validator,
+    this.isPassword = false,
+    this.keyboardType = TextInputType.text,
+  });
+
+  @override
+  State<CustomInputField> createState() => _CustomInputFieldState();
+}
+
+class _CustomInputFieldState extends State<CustomInputField> {
+  bool _showSuffix = false;
+  bool _showPassword = false;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget? suffixIcon;
+    if (widget.isPassword && _showSuffix) {
+      suffixIcon = IconButton(
+        icon: _showPassword
+            ? SvgPicture.asset('assets/icon/eye_slash.svg')
+            : SvgPicture.asset('assets/icon/eye.svg'),
+        onPressed: () => setState(() => _showPassword = !_showPassword),
+      );
+    } else if (_showSuffix) {
+      suffixIcon = IconButton(
+        icon: SvgPicture.asset('assets/icon/delete.svg'),
+        onPressed: () {
+          widget.controller.clear();
+          setState(() => _showSuffix = false);
+        },
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.label,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(height: 4),
+        TextFormField(
+          controller: widget.controller,
+          obscureText: widget.isPassword ? !_showPassword : false,
+          keyboardType: widget.keyboardType,
+          validator: widget.validator,
+          onChanged: (value) {
+            setState(() {
+              _showSuffix = value.isNotEmpty;
+            });
+          },
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.orange),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.orangeAccent),
+            ),
+            suffixIcon: suffixIcon,
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+}
+
